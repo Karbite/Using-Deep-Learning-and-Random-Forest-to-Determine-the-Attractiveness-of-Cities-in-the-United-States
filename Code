@@ -1,0 +1,74 @@
+Made using Google Collaboratory
+
+#Import packages
+import pandas as pd
+from matplotlib import pyplot
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
+from pandas.plotting import scatter_matrix
+from sklearn.ensemble import RandomForestClassifier
+import numpy as np
+import sklearn
+
+from google.colab import drive
+drive.mount("/content/drive")
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+path = "//content/drive/My Drive/Fall 2020 Team 5/FinalData.csv"
+data = pd.read_csv(path)
+data.shape
+
+data
+
+#Counts of dependent variable
+data['Attractiveness '].value_counts()
+
+data.describe()
+
+#Separate out dependent variable
+y = data.pop('Attractiveness ')
+
+y.unique()
+
+#Get rid of cities column
+z = data.pop('Unnamed: 0')
+
+#Separate out indepedent variables
+x = data.copy()
+
+x
+
+x_train, x_test, y_train, y_test = train_test_split(x,y, test_size=0.2)
+x_train.shape, x_test.shape, y_train.shape, y_test.shape
+
+x_train
+
+x_test
+
+y_train
+
+y_test
+
+#Build Model
+model = RandomForestClassifier()
+model.fit(x_train, y_train)
+
+#Predict for test set
+predictions = model.predict(x_test)
+
+predictions
+
+#Check accuracy of predictions
+accuracy_score(y_test, predictions)
+
+#Plot confusion matrix
+sklearn.metrics.plot_confusion_matrix(model, x_test, y_test)
+
+#Use the feature importance to find the most independent variables
+feature_importance = pd.DataFrame({'Feature' : x_train.columns, 'Importance' : model.feature_importances_})
+feature_importance.sort_values('Importance', ascending=False, inplace=True)
+
+feature_importance
